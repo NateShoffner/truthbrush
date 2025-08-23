@@ -488,7 +488,8 @@ class Api:
             sess_req.raise_for_status()
         except requests.RequestsError as e:
             logger.error(f"Failed login request: {str(e)}")
-            raise SystemExit('Cannot authenticate to .')
+            #raise SystemExit('Cannot authenticate to .')
+            raise LoginErrorException("Cannot authenticate to Truth Social.")
 
         if not sess_req.json()["access_token"]:
             raise ValueError("Invalid truthsocial.com credentials provided!")
