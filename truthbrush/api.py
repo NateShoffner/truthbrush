@@ -351,6 +351,28 @@ class Api:
                 n_output += 1
                 if maximum is not None and n_output >= maximum:
                     return
+                
+    def pull_status(
+        self, post: str, verbose=False, include_all=False
+    ) -> Optional[dict]:
+        """Pull the given post's status.
+
+        Returns a dictionary of the post's status, or None if not found.
+        """
+
+        self.__check_login()
+        post = post.split("/")[-1]
+        params = {"include_replies": include_all}
+        url = f"/v1/statuses/{post}"
+        if verbose:
+            logger.debug(f"GET {url} {params}")
+        result = self._get(url, params=params)
+
+        if "error" in result:
+            logger.error(f"API returned an error while pulling post #{post}: {result}")
+            return None
+
+        return result
 
     def pull_statuses(
         self,
